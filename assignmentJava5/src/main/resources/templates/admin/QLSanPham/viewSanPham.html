@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/dashboardlayout.html}">
+<head>
+    <title>San Pham</title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-8 p-2">
+            <div class="row">
+                <form class="col-4" action="#" th:action="@{list-products}" method="get">
+                    <input type="text" name="keywordsearch" placeholder="enter ten san pham..">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+                <div class="col-4">
+                    <select class="browser-default custom-select">
+                        <option selected>Sắp xếp</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <select class="browser-default custom-select">
+                        <option selected>Dòng sản phẩm</option>
+                        <option th:each="option : ${listDongSp}" th:value="${option.getTen()}"
+                                th:text="${option.getTen()}"></option>
+                    </select>
+                </div>
+            </div>
+            <div th:each="item: ${listDongSp}">
+                <h3>Loai san pham: <span th:utext="${item.getTen()}"></span></h3>
+                <table class="table" th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(item.getId())}">
+                    <tr th:onclick="'javascript:rowClicked(\'' + ${itemsp.getId()} + '\');'" style="cursor: pointer">
+                        <th scope="col" th:utext="${itemsp.getTenSp()}"></th>
+                        <th scope="col" th:utext="${itemsp.getNsx()}"></th>
+                        <th scope="col" th:utext="${itemsp.getMauSac()}"></th>
+                        <th scope="col" th:utext="${itemsp.getNamBh()}"></th>
+                        <th scope="col" th:utext="${itemsp.getMoTa()}"></th>
+                        <th scope="col" th:utext="${itemsp.getSoLuongTon()}"></th>
+                        <th scope="col" th:utext="${itemsp.getGiaNhap()}"></th>
+                        <th scope="col" th:utext="${itemsp.getGiaBan()}"></th>
+                        <th scope="col" th:utext="${itemsp.getDonGiaKhiGiam()}"></th>
+                        <th scope="col"><a th:href="@{admin/edit-product/{Id}(Id = ${itemsp.getId()})}">Add new</a></th>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div class="col-4 p-2">
+            <div class="align-content-center">
+                <h3>Them moi hoac chinh sua san pham</h3>
+            </div>
+
+            <form th:action="@{admin/product/add}" method="post" th:object="${product}">
+                <div class="form-group">
+                    <label for="tensp">Tên sản phẩm</label>
+                    <input type="text" class="form-control" th:field="*{tenSp}" id="tensp"
+                           placeholder="Enter tên sản phẩm">
+
+                </div>
+                <div class="form-group">
+                    <label for="nsx">Nhà Sản Xuất</label>
+                    <input type="text" th:field="*{nsx}" class="form-control" id="nsx">
+                </div>
+                <div class="row form-group">
+
+                    <div class="col-4">
+                        <label for="mausac">Màu Sắc</label>
+                        <input type="text" th:field="*{mauSac}" class="form-control" id="mausac">
+                    </div>
+
+                    <div class="col-8">
+                        <label for="dongspp">Dòng Sản phẩm</label>
+                        <select class="browser-default custom-select" id="dongspp">
+                            <option th:if="(*{idDongSp} == null)" th:each="option : ${listDongSp}"
+                                    th:value="${option.getTen()}"
+                                    th:text="${option.getTen()}"></option>
+                            <option th:if="(*{idDongSp} != null)" th:each="option : ${listDongSp}" th:value="${option}"
+                                    th:text="${option.getTen()}"
+                                    th:selected="(${option.getId()} == *{idDongSp.getId()})"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nambh">Năm Ban Hành</label>
+                    <input type="text" th:field="*{namBh}" class="form-control" id="nambh">
+                </div>
+                <div class="form-group">
+                    <label for="mota">Mô tả</label>
+                    <input type="text" th:field="*{moTa}" class="form-control" id="mota">
+                </div>
+                <div class="form-group">
+                    <label for="soluongton">Số Lượng Tồn </label>
+                    <input type="text" th:field="*{soLuongTon}" class="form-control" id="soluongton">
+                </div>
+                <div class="form-group">
+                    <label for="gianhap">Giá Nhập</label>
+                    <input type="text" th:field="*{giaNhap}" class="form-control" id="gianhap">
+                </div>
+                <div class="form-group">
+                    <label for="giaban">Giá Bán</label>
+                    <input type="text" th:field="*{giaBan}" class="form-control" id="giaban">
+                </div>
+                <div class="form-group">
+                    <label for="dongiakhigiam">Đơn giá khi giảm</label>
+                    <input type="text" th:field="*{donGiaKhiGiam}" class="form-control" id="dongiakhigiam">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button class="btn btn-primary" th:onclick="'javascript:clearForm();'">Clear</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function rowClicked(value) {
+            location.href = "/admin/list-products/" + value;
+        }
+
+        function clearForm(){
+            location.href= "/admin/list-products/clear";
+        }
+    </script>
+</div>
+
+
+</body>
+</html>

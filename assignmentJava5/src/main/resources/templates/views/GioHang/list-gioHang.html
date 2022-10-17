@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gio Hang</title>
+    <style>
+        table, th, td {
+            border: 1px solid;
+
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <table>
+        <tr>
+            <th>Ten san pham</th>
+            <th>so luong</th>
+            <th>ngay tao</th>
+            <th></th>
+        </tr>
+        <tr th:each="item : ${lsgiohang}">
+            <td th:utext="${item.getTenNguoiNhan()}"></td>
+            <td th:utext="${item.getSoLuongSp()}"></td>
+            <td th:utext="${item.getNgayTao()}"></td>
+            <!--                <td><a th:href="@{{Idremove}(Idremove = ${item.getId()})}" />remove</td>-->
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>

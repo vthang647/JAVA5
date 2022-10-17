@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>welcome Home!</h1>
+    <div th:each="item: ${listDongSp}">
+        <h3>Loai san pham: <span th:utext="${item.getTen()}"></span></h3>
+        <table th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(item.getId())}">
+            <tr>
+                <th th:utext="${itemsp.getTenSp()}"></th>
+                <th>  <a th:href="@{list-giohang/add/{Id}(Id = ${itemsp.getId()})}">Thêm vào giỏ hàng</a></th>
+                <th><a th:href="@{products/detail/{Id}(Id = ${itemsp.getId()})}">Xem chi tiết</a></th>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

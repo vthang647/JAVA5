@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/dashboardlayout.html}">
+<head>
+    <title>Title</title>
+    <style>
+        table, th, td {
+            border: 1px solid;
+
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Customers</h1>
+    <div>
+        <label for="search">search</label>
+        <input type="text" id="search" name="search" placeholder="tìm kiếm"/>
+        <button type="submit">search</button>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>MA</th>
+                <th>TEN</th>
+                <th>TEN DEM</th>
+                <th>HO</th>
+                <th>NGAY SINH</th>
+                <th>SO DIEN THOAI</th>
+                <th>DIA CHI</th>
+                <th>THANH PHO</th>
+                <th>QUOC GIA</th>
+            </tr>
+            <tr th:each="item : ${list}">
+                <th th:utext="${item.ma}">MA</th>
+                <th th:utext="${item.ten}">TEN</th>
+                <th th:utext="${item.tenDem}">TEN DEM</th>
+                <th th:utext="${item.ho}">HO</th>
+                <th th:utext="${item.ngaySinh}">NGAY SINH</th>
+                <th th:utext="${item.sdt}">SO DIEN THOAI</th>
+                <th th:utext="${item.diaChi}">DIA CHI</th>
+                <th th:utext="${item.thanhPho}">THANH PHO</th>
+                <th th:utext="${item.quocGia}">QUOC GIA</th>
+            </tr>
+        </table>
+    </div>
+
+
+    <div>
+        <a th:href="@{addOrEdit}">ADD NEW</a>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/dashboardlayout.html}">
+<head>
+    <title>Admin</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <a th:href="@{/list-customers}">Quản lý khách hàng</a>
+    <br/>
+    <a th:href="@{/list-products}">Quản lý Sản Phẩm</a>
+    <br/>
+    <a th:href="@{chiTietSanPham}">Quản lý Dòng Sản Phẩm</a>
+    <br/>
+    <a th:href="@{chiTietSanPham}">Quản lý Giỏ Hàng</a>
+    <br/>
+    <a th:href="@{chiTietSanPham}">Quản lý Tài Khoản</a>
+    <br/>
+    <a th:href="@{chiTietSanPham}">Quản lý Đơn Hàng </a>
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add or Edit</title>
+</head>
+<body>
+<h1>Add or edit hello guys</h1>
+<div style="alignment: center">
+    <form th:action="@{addOrEdit}" method="post" th:object="${khachhang}">
+        <div>
+            <label for="ma">Mã khách hàng</label>
+            <input type="text" id="ma" name="ma" th:field="*{ma}" placeholder="ma khach hang ...."/>
+        </div>
+        <div>
+            <label for="ten">Tên</label>
+            <input type="text" id="ten" name="ten" th:field="*{ten}" placeholder="ten ...."/>
+        </div>
+        <div>
+            <label for="tendem">Tên đệm</label>
+            <input type="text" id="tendem" name="tendem" th:field="*{tenDem}" placeholder="ten dem ...."/>
+        </div>
+        <div>
+            <label for="ho">Họ</label>
+            <input type="text" id="ho" name="ho" th:field="*{ho}" placeholder="họ khach hang ...."/>
+        </div>
+        <div>
+            <label for="ngaysinh">Ngày sinh</label>
+            <input type="date" id="ngaysinh" th:field="*{ngaySinh}" name="ngaysinh"/>
+        </div>
+        <div>
+            <label for="sdt">Số điện thoại</label>
+            <input type="text" id="sdt" name="sdt" th:field="*{sdt}" placeholder="012345678"/>
+        </div>
+        <div>
+            <label for="diachi">Địa chỉ</label>
+            <input type="text" id="diachi" name="diachi" th:field="*{diaChi}" placeholder="phường A, Huyện B, TP Hà Nội ...."/>
+        </div>
+        <div>
+
+            <label for="thanhpho">Thành phố</label>
+            <input type="text" id="thanhpho" name="thanhpho" th:field="*{thanhPho}" placeholder="TP Hà Nội ...."/>
+        </div>
+        <div>
+            <label for="quocgia">Quốc Gia</label>
+            <input type="text" id="quocgia" name="quocgia" th:field="*{quocGia}" placeholder="Viet Nam ...."/>
+        </div>
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+</body>
+</html>
