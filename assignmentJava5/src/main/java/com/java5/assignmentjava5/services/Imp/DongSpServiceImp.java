@@ -22,6 +22,12 @@ public class DongSpServiceImp implements DongSpService {
     DongSpRepository dongSpRepository;
 
     @Override
+    @Query(value = "select * from dong_sp where id=:id", nativeQuery = true)
+    public DongSp findByID(int id) {
+        return dongSpRepository.findByID(id);
+    }
+
+    @Override
     @Query(value = "select * from dong_sp", nativeQuery = true)
     public List<DongSp> selectAll() {
         return dongSpRepository.selectAll();

@@ -14,6 +14,9 @@ import java.util.function.Function;
 
 public interface DongSpService {
 
+    @Query(value = "select * from dong_sp where id=:id", nativeQuery = true)
+    DongSp findByID(int id);
+
     @Query(value = "select * from dong_sp", nativeQuery = true)
     List<DongSp> selectAll();
 

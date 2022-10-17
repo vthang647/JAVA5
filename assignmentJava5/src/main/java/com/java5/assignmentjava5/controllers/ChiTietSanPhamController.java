@@ -25,17 +25,20 @@ public class ChiTietSanPhamController {
     @Autowired
     DongSpService dongSpService;
 
-    @GetMapping("list-products/clear")
-    public String clearForm(Model model, @ModelAttribute("product") SanPham product,
+    @GetMapping("/list-products")
+    public String getRe_view_adminCTSP(Model model, @ModelAttribute("product") SanPham product,
                                        @RequestParam( required = false,name="keywordsearch") String keyword){
         List<DongSp> ls_dongsp = dongSpService.selectAll();
         model.addAttribute("listDongSp", ls_dongsp);
         return "admin/QLSanPham/viewSanPham";
     }
 
-    @GetMapping("/list-products")
-    public String getRe_view_adminCTSP(Model model, @ModelAttribute("product") SanPham product,
-                                       @RequestParam( required = false,name="keywordsearch") String keyword){
+    @GetMapping("/list-products/delete/{Id}")
+    public String deleteSanPham(Model model,
+                                @ModelAttribute("product") SanPham product ,
+                                @PathVariable("Id") String Id){
+
+        System.out.println("Id remove: "+ Id);
         List<DongSp> ls_dongsp = dongSpService.selectAll();
         model.addAttribute("listDongSp", ls_dongsp);
         return "admin/QLSanPham/viewSanPham";
@@ -65,21 +68,22 @@ public class ChiTietSanPhamController {
         return "admin/QLSanPham/viewSanPham";
     }
 
-    @PostMapping("/product/add")
-    public String getProductToAdd(@ModelAttribute("product") SanPham product, Model model){
+    @PostMapping("/list-products/add")
+    public String getProductToAdd(@ModelAttribute("product") SanPham product,
+                                  @RequestParam( required = false, name = "dongsppp") String dongSp ,Model model){
         ChiTietSp chiTietSp = new ChiTietSp();
-
+        DongSp dongSp1 = dongSpService.findByID(Integer.parseInt(dongSp));
         chiTietSp.setTenSp(product.getTenSp());
         chiTietSp.setNsx(product.getNsx());
         chiTietSp.setMauSac(product.getMauSac());
-        chiTietSp.setIdDongSp(product.getIdDongSp());
+        chiTietSp.setIdDongSp(dongSp1);
         chiTietSp.setNamBh(product.getNamBh());
         chiTietSp.setMoTa(product.getMoTa());
         chiTietSp.setSoLuongTon(product.getSoLuongTon());
         chiTietSp.setGiaNhap(product.getGiaNhap());
         chiTietSp.setGiaBan(product.getGiaBan());
         chiTietSp.setDonGiaKhiGiam(product.getDonGiaKhiGiam());
-
+        System.out.println("chi tiet san pham: "+ chiTietSp.getTenSp());
         chiTietSpService.save(chiTietSp);
         List<DongSp> ls_dongsp = dongSpService.selectAll();
         model.addAttribute("listDongSp", ls_dongsp);
