@@ -14,4 +14,6 @@ public interface DongSpRepository extends JpaRepository<DongSp, Long> {
     public List<DongSp> selectAll();
     @Query(value = "select * from dong_sp where id=:id", nativeQuery = true)
     public DongSp findByID(@Param("id") int id);
+
+
 }

@@ -13,8 +13,10 @@
         <div class="col-8 p-2">
             <div class="row">
                 <form class="col-4" action="#" th:action="@{list-products}" method="get">
-                    <input type="text" name="keywordsearch" placeholder="enter ten san pham..">
-                    <button type="submit"><i class="fa fa-search"></i></button>
+                    <div>
+                        <input type="text" name="keywordsearch" placeholder="enter ten san pham..">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </div>
                 </form>
                 <div class="col-4">
                     <select class="browser-default custom-select">
@@ -25,32 +27,49 @@
                     </select>
                 </div>
                 <div class="col-4">
-                    <select class="browser-default custom-select">
-                        <option selected>Dòng sản phẩm</option>
-                        <option th:each="option : ${listDongSp}" th:value="${option.getTen()}"
-                                th:text="${option.getTen()}"></option>
+                    <select class="browser-default custom-select"
+                            th:onchange="'javascript:changeSelectOptions( this.value );'">
+                        <option th:text="All" th:value="All"></option>
+                        <option th:each="option : ${listDongSp}" th:value="${option.getId()}"
+                                th:text="${option.getTen()}" th:selected="${option.getId()} == ${selectdongsp.getId()}"></option>
                     </select>
                 </div>
             </div>
-            <div th:each="item: ${listDongSp}">
-                <h3>Loai san pham: <span th:utext="${item.getTen()}"></span></h3>
-                <table class="table" th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(item.getId())}">
-                    <tr th:onclick="'javascript:rowClicked(\'' + ${itemsp.getId()} + '\');'" style="cursor: pointer">
-                        <th scope="col" th:utext="${itemsp.getTenSp()}"></th>
-                        <th scope="col" th:utext="${itemsp.getNsx()}"></th>
-                        <th scope="col" th:utext="${itemsp.getMauSac()}"></th>
-                        <th scope="col" th:utext="${itemsp.getNamBh()}"></th>
-                        <th scope="col" th:utext="${itemsp.getMoTa()}"></th>
-                        <th scope="col" th:utext="${itemsp.getSoLuongTon()}"></th>
-                        <th scope="col" th:utext="${itemsp.getGiaNhap()}"></th>
-                        <th scope="col" th:utext="${itemsp.getGiaBan()}"></th>
-                        <th scope="col" th:utext="${itemsp.getDonGiaKhiGiam()}"></th>
-                        <th><a th:href="@{/admin/list-products/delete/{Id}(Id=${itemsp.getId()})}"><i class="fa fa-trash-o" aria-hidden="true"></i></a> </th>
-                    </tr>
+            <table>
+                <h3>Loai san pham: <span th:utext="${selectdongsp.getTen()}"></span></h3>
+                <thead>
+                <tr>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Nsx</th>
+                    <th scope="col">Màu Sắc</th>
+                    <th scope="col">Năm Bh</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col">Số Lượng tồn</th>
+                    <th scope="col">Giá Nhập</th>
+                    <th scope="col">Giá Bán</th>
+                    <th scope="col">Giá Sau khi giảm</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <table class="table" th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(selectdongsp.getId())}">
+                        <tr th:onclick="'javascript:rowClicked(\'' + ${itemsp.getId()} + '\',\''  +${op}+ '\');'" style="cursor: pointer">
+                            <th th:utext="${itemsp.getTenSp()}"></th>
+                            <th th:utext="${itemsp.getNsx()}"></th>
+                            <th th:utext="${itemsp.getMauSac()}"></th>
+                            <th th:utext="${itemsp.getNamBh()}"></th>
+                            <th th:utext="${itemsp.getMoTa()}"></th>
+                            <th th:utext="${itemsp.getSoLuongTon()}"></th>
+                            <th th:utext="${itemsp.getGiaNhap()}"></th>
+                            <th th:utext="${itemsp.getGiaBan()}"></th>
+                            <th th:utext="${itemsp.getDonGiaKhiGiam()}"></th>
+                            <th><a th:href="@{/admin/list-products/delete/{Id}(Id=${itemsp.getId()})}"><i
+                                    class="fa fa-trash-o" aria-hidden="true"></i></a></th>
+                        </tr>
+                    </table>
+                </tbody>
 
-                </table>
-
-            </div>
+            </table>
         </div>
 
         <div class="col-4 p-2">
@@ -123,8 +142,12 @@
         </div>
     </div>
     <script>
-        function rowClicked(value) {
-            location.href = "/admin/list-products/" + value;
+        function rowClicked(value, v) {
+            location.href = "/admin/list-products?option="+v+"&Id=" + value;
+        }
+
+        function changeSelectOptions(value) {
+            location.href = "/admin/list-products?option=" + value;
         }
 
         function clearForm() {
