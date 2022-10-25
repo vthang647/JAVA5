@@ -19,11 +19,14 @@
                     </div>
                 </form>
                 <div class="col-4">
-                    <select class="browser-default custom-select">
-                        <option selected>Sắp xếp</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select class="browser-default custom-select"
+                            th:onchange="'javascript:changeSelectSoft(\''  +${op}+ '\' , this.value);'">
+                        <option th:selected="${softsp} == -1" disabled>Sắp xếp</option>
+                        <option th:each="se,inter : ${listSoftMode}"
+                                th:value="${inter.index}"
+                                th:text="${se}"
+                                th:selected="${inter.index}== ${softsp}"></option>
+
                     </select>
                 </div>
                 <div class="col-4">
@@ -52,7 +55,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <table class="table" th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(selectdongsp.getId())}">
+                    <table class="table" th:each="itemsp : ${lsctsptheodongsp}">
                         <tr th:onclick="'javascript:rowClicked(\'' + ${itemsp.getId()} + '\',\''  +${op}+ '\');'" style="cursor: pointer">
                             <th th:utext="${itemsp.getTenSp()}"></th>
                             <th th:utext="${itemsp.getNsx()}"></th>
@@ -80,7 +83,7 @@
                 <button class="btn btn-primary" th:onclick="'javascript:clearForm();'">Clear</button>
             </div>
 
-            <form th:action="@{add}" method="post" th:object="${product}">
+            <form th:action="@{/admin/list-products/add}" method="post" th:object="${product}">
                 <div class="form-group">
                     <label for="tensp">Tên sản phẩm</label>
                     <input type="text" class="form-control" th:field="*{tenSp}" id="tensp"
@@ -136,7 +139,8 @@
                     <input type="text" th:field="*{donGiaKhiGiam}" class="form-control" id="dongiakhigiam">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" name="action" value="add" class="btn btn-primary">Save</button>
+                <button type="submit" name="action" value="update" class="btn btn-primary">Update</button>
             </form>
 
         </div>
@@ -152,6 +156,10 @@
 
         function clearForm() {
             location.href = "/admin/list-products";
+        }
+
+        function changeSelectSoft(v, value) {
+            location.href = "/admin/list-products?option="+v+"&soft=" + value;
         }
     </script>
 </div>

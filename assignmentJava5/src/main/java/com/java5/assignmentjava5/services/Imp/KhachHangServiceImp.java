@@ -20,8 +20,17 @@ public class KhachHangServiceImp implements KhachHangService {
     KhachHangResponsitory khachHangResponsitory;
 
     @Override
+    public KhachHang login(String user, String passwd){
+        Optional<KhachHang> khachHang = findByCode(user);
+        if(khachHang.isPresent() && khachHang.get().getMatKhau().equals(passwd)){
+            return khachHang.get();
+        }
+        return null;
+    }
+
+    @Override
     @Query(value = "select * from khach_hang where ma= :code", nativeQuery = true)
-    public List<KhachHang> findByCode(String code) {
+    public Optional<KhachHang> findByCode(String code) {
         return khachHangResponsitory.findByCode(code);
     }
 

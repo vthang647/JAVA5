@@ -18,6 +18,12 @@ public interface ChiTietSpService {
     @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code", nativeQuery = true)
     List<ChiTietSp> findByIdDongsp(String code);
 
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code order by don_gia_khi_giam DESC", nativeQuery = true)
+    List<ChiTietSp> softByIdDongspDESC(String code);
+
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code  order by don_gia_khi_giam ASC", nativeQuery = true)
+    List<ChiTietSp> softByIdDongspASC(String code);
+
     @Query(value = "select * from chi_tiet_sp where ten_sp like %:keyword%", nativeQuery = true)
     List<ChiTietSp> findByTenSp(String keyword);
 

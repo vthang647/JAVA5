@@ -13,6 +13,12 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSp, Long>
     @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code",nativeQuery = true)
     public List<ChiTietSp> findByIdDongsp(@Param("code") String code);
 
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code order by don_gia_khi_giam DESC",nativeQuery = true)
+    public List<ChiTietSp> softByIdDongspDESC(@Param("code") String code);
+
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code  order by don_gia_khi_giam ASC",nativeQuery = true)
+    public List<ChiTietSp> softByIdDongspASC(@Param("code") String code);
+
     @Query(value = "select * from chi_tiet_sp where id_sp= :code",nativeQuery = true)
     public ChiTietSp findById(@Param("code") int code);
 

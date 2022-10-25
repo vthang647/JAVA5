@@ -14,8 +14,10 @@ import java.util.function.Function;
 
 public interface KhachHangService {
 
+    KhachHang login(String user, String passwd);
+
     @Query(value = "select * from khach_hang where ma= :code", nativeQuery = true)
-    List<KhachHang> findByCode(String code);
+    Optional<KhachHang> findByCode(String code);
 
     List<KhachHang> findAll();
 

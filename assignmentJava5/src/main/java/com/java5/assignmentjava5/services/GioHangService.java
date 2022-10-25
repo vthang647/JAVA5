@@ -1,6 +1,7 @@
 package com.java5.assignmentjava5.services;
 
 import com.java5.assignmentjava5.entities.GioHang;
+import com.java5.assignmentjava5.models.DongspJoinChitietSp;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +16,14 @@ import java.util.function.Function;
 public interface GioHangService {
 
 
-    @Query(value = "select * from gio_hang where id_sp = :code", nativeQuery = true)
-    GioHang findById(int idsp);
+//    @Query(value = "select * from gio_hang where id_sp = :code", nativeQuery = true)
+    GioHang findByIdsp(int idsp);
+
+
+    @Query(value = "select ten_sp,mo_ta,gia_ban,don_gia_khi_giam,ma,ngay_tao,so_luong_sp from gio_hang join chi_tiet_sp on gio_hang.id_sp = chi_tiet_sp.id_sp", nativeQuery = true)
+    List<Object[]> getInFoGioHang();
 
     List<GioHang> findAll();
-
-
 
     List<GioHang> findAll(Sort sort);
 

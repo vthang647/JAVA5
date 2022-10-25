@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,10 +29,98 @@ public class ChiTietSanPhamController {
     DongSpService dongSpService;
 
     @GetMapping("/list-products")
-    public String getRe_view_adminCTSP(Model model, @ModelAttribute("product") SanPham product,
+    public String getRe_view_adminCTSP(Model model,
+                                        HttpSession session,
+                                       @ModelAttribute("product") SanPham product,
                                        @RequestParam(required = false, name = "keywordsearch") String keyword,
                                        @RequestParam(defaultValue = "1", name = "option") String option,
+                                       @RequestParam(defaultValue = "-1", name = "soft") int soft,
                                        @RequestParam(required = false, name = "Id") String Id) {
+        List<DongSp> ls_dongsp = dongSpService.selectAll();
+        int iddsp = Integer.parseInt(option);
+        DongSp dsp = dongSpService.findByID(iddsp);
+        if (Id != null) {
+            session.setAttribute("IdSession", Id);
+            ChiTietSp chiTietSp = chiTietSpService.findById(Integer.parseInt(Id));
+
+            product.setTenSp(chiTietSp.getTenSp());
+            product.setNsx(chiTietSp.getNsx());
+            product.setMauSac(chiTietSp.getMauSac());
+            product.setNamBh(chiTietSp.getNamBh());
+            product.setMoTa(chiTietSp.getMoTa());
+            product.setIdDongSp(chiTietSp.getIdDongSp());
+            product.setSoLuongTon(chiTietSp.getSoLuongTon());
+            product.setGiaNhap(chiTietSp.getGiaNhap());
+            product.setGiaBan(chiTietSp.getGiaBan());
+            product.setDonGiaKhiGiam(chiTietSp.getDonGiaKhiGiam());
+        }
+
+        String[] listSoftMode = new String[]{"Giá giảm dần","Giá Tăng dần"};
+
+        List<ChiTietSp> lsCtsptheodongsp = new ArrayList<>();
+
+        if (soft == -1){
+            lsCtsptheodongsp = chiTietSpService.findByIdDongsp(dsp.getId()+"");
+        } else if (soft == 0) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspDESC(dsp.getId()+"");
+        } else if (soft == 1) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspASC(dsp.getId()+"");
+        }
+
+        model.addAttribute("listSoftMode", listSoftMode);
+        model.addAttribute("softsp", soft);
+        model.addAttribute("op", iddsp);
+        model.addAttribute("listDongSp", ls_dongsp);
+        model.addAttribute("selectdongsp", dsp);
+        model.addAttribute("lsctsptheodongsp", lsCtsptheodongsp);
+
+        return "admin/QLSanPham/viewSanPham";
+    }
+
+    @GetMapping("/list-products/delete/{Id}")
+    public String deleteSanPham(Model model,
+                                @ModelAttribute("product") SanPham product,
+                                @PathVariable("Id") String Id,
+                                @RequestParam(required = false, name = "keywordsearch") String keyword,
+                                @RequestParam(defaultValue = "1", name = "option") String option,
+                                @RequestParam(defaultValue = "-1", name = "soft") int soft) {
+
+        ChiTietSp chiTietSp = chiTietSpService.findById(Integer.parseInt(Id));
+        chiTietSpService.delete(chiTietSp);
+
+        List<DongSp> ls_dongsp = dongSpService.selectAll();
+        int iddsp = Integer.parseInt(option);
+        DongSp dsp = dongSpService.findByID(iddsp);
+
+        String[] listSoftMode = new String[]{"Giá giảm dần","Giá Tăng dần"};
+
+        List<ChiTietSp> lsCtsptheodongsp = new ArrayList<>();
+
+        if (soft == -1){
+            lsCtsptheodongsp = chiTietSpService.findByIdDongsp(dsp.getId()+"");
+        } else if (soft == 0) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspDESC(dsp.getId()+"");
+        } else if (soft == 1) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspASC(dsp.getId()+"");
+        }
+
+        model.addAttribute("listSoftMode", listSoftMode);
+        model.addAttribute("softsp", soft);
+        model.addAttribute("op", iddsp);
+        model.addAttribute("listDongSp", ls_dongsp);
+        model.addAttribute("selectdongsp", dsp);
+        model.addAttribute("lsctsptheodongsp", lsCtsptheodongsp);
+        return "admin/QLSanPham/viewSanPham";
+    }
+
+    @PostMapping("/list-products/add")
+    public String getProductToAdd(@ModelAttribute("product") SanPham product,
+                                  @RequestParam(required = false, name = "dongsppp") String dongSp,
+                                  @RequestParam(required = false, name = "keywordsearch") String keyword,
+                                  @RequestParam(defaultValue = "1", name = "option") String option,
+                                  @RequestParam(defaultValue = "-1", name = "soft") int soft,
+                                  @RequestParam(required = false, name = "Id") String Id,
+                                  Model model) {
         List<DongSp> ls_dongsp = dongSpService.selectAll();
         int iddsp = Integer.parseInt(option);
         DongSp dsp = dongSpService.findByID(iddsp);
@@ -48,32 +139,17 @@ public class ChiTietSanPhamController {
             product.setDonGiaKhiGiam(chiTietSp.getDonGiaKhiGiam());
         }
 
+        String[] listSoftMode = new String[]{"Giá giảm dần","Giá Tăng dần"};
 
-        model.addAttribute("op", iddsp);
-        model.addAttribute("listDongSp", ls_dongsp);
-        model.addAttribute("selectdongsp", dsp);
+        List<ChiTietSp> lsCtsptheodongsp = new ArrayList<>();
 
-        return "admin/QLSanPham/viewSanPham";
-    }
-
-    @GetMapping("/list-products/delete/{Id}")
-    public String deleteSanPham(Model model,
-                                @ModelAttribute("product") SanPham product,
-                                @PathVariable("Id") String Id) {
-
-        ChiTietSp chiTietSp = chiTietSpService.findById(Integer.parseInt(Id));
-        chiTietSpService.delete(chiTietSp);
-
-        List<DongSp> ls_dongsp = dongSpService.selectAll();
-        model.addAttribute("listDongSp", ls_dongsp);
-        return "admin/QLSanPham/viewSanPham";
-    }
-
-    @PostMapping("/list-products/add")
-    public String getProductToAdd(@ModelAttribute("product") SanPham product,
-                                  @RequestParam(required = false, name = "dongsppp") String dongSp,
-
-                                  Model model) {
+        if (soft == -1){
+            lsCtsptheodongsp = chiTietSpService.findByIdDongsp(dsp.getId()+"");
+        } else if (soft == 0) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspDESC(dsp.getId()+"");
+        } else if (soft == 1) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspASC(dsp.getId()+"");
+        }
         ChiTietSp chiTietSp = new ChiTietSp();
         DongSp dongSp1 = dongSpService.findByID(Integer.parseInt(dongSp));
 
@@ -87,11 +163,84 @@ public class ChiTietSanPhamController {
         chiTietSp.setGiaNhap(product.getGiaNhap());
         chiTietSp.setGiaBan(product.getGiaBan());
         chiTietSp.setDonGiaKhiGiam(product.getDonGiaKhiGiam());
-        System.out.println("chi tiet san pham: " + chiTietSp.getTenSp());
+
         chiTietSpService.save(chiTietSp);
-        List<DongSp> ls_dongsp = dongSpService.selectAll();
+        System.out.println("dongsp: "+ dongSp);
+
+        model.addAttribute("listSoftMode", listSoftMode);
+        model.addAttribute("softsp", soft);
+        model.addAttribute("op", iddsp);
         model.addAttribute("listDongSp", ls_dongsp);
+        model.addAttribute("selectdongsp", dsp);
+        model.addAttribute("lsctsptheodongsp", lsCtsptheodongsp);
         return "admin/QLSanPham/viewSanPham";
+    }
+
+    @PostMapping(value = "/list-products/add", params = "action=update")
+    public ModelAndView Update(@ModelAttribute("product") SanPham product,
+                               @RequestParam(required = false, name = "dongsppp") String dongSp,
+                               @RequestParam(required = false, name = "keywordsearch") String keyword,
+                               @RequestParam(defaultValue = "1", name = "option") String option,
+                               @RequestParam(defaultValue = "-1", name = "soft") int soft,
+                               @RequestParam(required = false, name = "Id") String Id,
+                               @SessionAttribute("IdSession") String Ids){
+
+        ModelAndView modelAndView = new ModelAndView("admin/QLSanPham/viewSanPham");
+
+        List<DongSp> ls_dongsp = dongSpService.selectAll();
+        int iddsp = Integer.parseInt(option);
+        DongSp dsp = dongSpService.findByID(iddsp);
+        if (Id != null) {
+            ChiTietSp chiTietSp = chiTietSpService.findById(Integer.parseInt(Id));
+
+            product.setTenSp(chiTietSp.getTenSp());
+            product.setNsx(chiTietSp.getNsx());
+            product.setMauSac(chiTietSp.getMauSac());
+            product.setNamBh(chiTietSp.getNamBh());
+            product.setMoTa(chiTietSp.getMoTa());
+            product.setIdDongSp(chiTietSp.getIdDongSp());
+            product.setSoLuongTon(chiTietSp.getSoLuongTon());
+            product.setGiaNhap(chiTietSp.getGiaNhap());
+            product.setGiaBan(chiTietSp.getGiaBan());
+            product.setDonGiaKhiGiam(chiTietSp.getDonGiaKhiGiam());
+        }
+
+        String[] listSoftMode = new String[]{"Giá giảm dần","Giá Tăng dần"};
+
+        List<ChiTietSp> lsCtsptheodongsp = new ArrayList<>();
+
+        if (soft == -1){
+            lsCtsptheodongsp = chiTietSpService.findByIdDongsp(dsp.getId()+"");
+        } else if (soft == 0) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspDESC(dsp.getId()+"");
+        } else if (soft == 1) {
+            lsCtsptheodongsp = chiTietSpService.softByIdDongspASC(dsp.getId()+"");
+        }
+        ChiTietSp chiTietSp = new ChiTietSp();
+        DongSp dongSp1 = dongSpService.findByID(Integer.parseInt(dongSp));
+
+        chiTietSp.setId(Integer.parseInt(Ids));
+        chiTietSp.setTenSp(product.getTenSp());
+        chiTietSp.setNsx(product.getNsx());
+        chiTietSp.setMauSac(product.getMauSac());
+        chiTietSp.setIdDongSp(dongSp1);
+        chiTietSp.setNamBh(product.getNamBh());
+        chiTietSp.setMoTa(product.getMoTa());
+        chiTietSp.setSoLuongTon(product.getSoLuongTon());
+        chiTietSp.setGiaNhap(product.getGiaNhap());
+        chiTietSp.setGiaBan(product.getGiaBan());
+        chiTietSp.setDonGiaKhiGiam(product.getDonGiaKhiGiam());
+
+        chiTietSpService.save(chiTietSp);
+
+        modelAndView.addObject("listSoftMode", listSoftMode);
+        modelAndView.addObject("softsp", soft);
+        modelAndView.addObject("op", iddsp);
+        modelAndView.addObject("listDongSp", ls_dongsp);
+        modelAndView.addObject("selectdongsp", dsp);
+        modelAndView.addObject("lsctsptheodongsp", lsCtsptheodongsp);
+
+        return modelAndView;
     }
 
 

@@ -1,21 +1,66 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{views/dashboardlayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
+
 <body>
-    <h1>welcome Home!</h1>
-    <div th:each="item: ${listDongSp}">
-        <h3>Loai san pham: <span th:utext="${item.getTen()}"></span></h3>
-        <table th:each="itemsp : ${@chiTietSpServiceImp.findByIdDongsp(item.getId())}">
-            <tr>
-                <th th:utext="${itemsp.getTenSp()}"></th>
-                <th>  <a th:href="@{list-giohang/add/{Id}(Id = ${itemsp.getId()})}">Thêm vào giỏ hàng</a></th>
-                <th><a th:href="@{products/detail/{Id}(Id = ${itemsp.getId()})}">Xem chi tiết</a></th>
-            </tr>
-        </table>
+<div layout:fragment="content" class="container-fluid">
+    <div class="row m-3 ml-0">
+        <div class="col-4">
+            <select class="browser-default custom-select"
+                    th:onchange="'javascript:changeSelectOptions( this.value );'">
+                <option th:each="dsp : ${listDongSp}"
+                        th:value="${dsp.getId()}"
+                        th:text="${dsp.getTen()}"
+                        th:selected="${dsp.getId()} == ${option}"></option>
+            </select>
+        </div>
+        <div class="col-8"></div>
     </div>
+
+    <div class="row text-center justify-content-center align-content-center">
+        <div class="card col-3 p-2 m-3 " style="cursor: pointer" th:each="itemsp : ${lsctsptheodongsp}">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title" th:utext="${itemsp.getTenSp()}">Card title</h5>
+                <p class="card-text" th:utext="${itemsp.getMoTa()}"></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Giá bán <p th:utext="${itemsp.getGiaBan()}"></p></li>
+                <li class="list-group-item">Giá giảm <p th:utext="${itemsp.getDonGiaKhiGiam()}"></p></li>
+            </ul>
+            <div class="card-body">
+                <a th:href="@{list-giohang/add/{Id}(Id = ${itemsp.getId()})}">Thêm vào giỏ hàng</a>
+                <br />
+                <a th:href="@{products/detail/{Id}(Id = ${itemsp.getId()})}">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function rowClicked(value, v) {
+            location.href = "/admin/list-products?option=" + v + "&Id=" + value;
+        }
+
+        function changeSelectOptions(value) {
+            location.href = "/?option=" + value;
+        }
+
+        function clearForm() {
+            location.href = "/admin/list-products";
+        }
+
+        function changeSelectSoft(v, value) {
+            location.href = "/admin/list-products?option=" + v + "&soft=" + value;
+        }
+    </script>
+</div>
+
 
 </body>
 </html>

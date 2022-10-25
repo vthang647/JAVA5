@@ -31,6 +31,18 @@ public class ChiTietSpServiceImp implements ChiTietSpService {
     }
 
     @Override
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code order by don_gia_khi_giam DESC", nativeQuery = true)
+    public List<ChiTietSp> softByIdDongspDESC(String code) {
+        return chiTietSanPhamRepository.softByIdDongspDESC(code);
+    }
+
+    @Override
+    @Query(value = "select * from chi_tiet_sp where id_dong_sp= :code  order by don_gia_khi_giam ASC", nativeQuery = true)
+    public List<ChiTietSp> softByIdDongspASC(String code) {
+        return chiTietSanPhamRepository.softByIdDongspASC(code);
+    }
+
+    @Override
     @Query(value = "select * from chi_tiet_sp where ten_sp like %:keyword%", nativeQuery = true)
     public List<ChiTietSp> findByTenSp(String keyword) {
         return chiTietSanPhamRepository.findByTenSp(keyword);

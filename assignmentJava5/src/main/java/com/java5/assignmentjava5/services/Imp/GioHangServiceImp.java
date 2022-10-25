@@ -22,9 +22,19 @@ public class GioHangServiceImp implements GioHangService {
     GioHangRepository gioHangRepository;
 
     @Override
-    @Query(value = "select * from gio_hang where id_sp = :code", nativeQuery = true)
-    public GioHang findById(int idsp) {
-        return gioHangRepository.findById(idsp);
+//    @Query(value = "select * from gio_hang where id_sp = :code", nativeQuery = true)
+    public GioHang findByIdsp(int idsp) {
+        Optional<GioHang> gh = gioHangRepository.findByIdsp(idsp);
+        if (gh.isPresent()){
+            return gh.get();
+        }
+        return null;
+    }
+
+    @Override
+    @Query(value = "select ten_sp,mo_ta,gia_ban,don_gia_khi_giam,ma,ngay_tao,so_luong_sp from gio_hang join chi_tiet_sp on gio_hang.id_sp = chi_tiet_sp.id_sp", nativeQuery = true)
+    public List<Object[]> getInFoGioHang() {
+        return gioHangRepository.getInFoGioHang();
     }
 
     @Override
