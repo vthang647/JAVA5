@@ -4,6 +4,11 @@
       layout:decorate="~{admin/dashboardlayout.html}">
 <head>
     <title>San Pham</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content" class="container-fluid">
@@ -88,17 +93,19 @@
                     <label for="tensp">Tên sản phẩm</label>
                     <input type="text" class="form-control" th:field="*{tenSp}" id="tensp"
                            placeholder="Enter tên sản phẩm">
-
+                    <p th:if="${#fields.hasErrors('tenSp')}" th:errorclass="error" th:errors="*{tenSp}" />
                 </div>
                 <div class="form-group">
                     <label for="nsx">Nhà Sản Xuất</label>
                     <input type="text" th:field="*{nsx}" class="form-control" id="nsx">
+                    <p th:if="${#fields.hasErrors('nsx')}" th:errorclass="error" th:errors="*{nsx}" />
                 </div>
                 <div class="row form-group">
 
                     <div class="col-4">
                         <label for="mausac">Màu Sắc</label>
                         <input type="text" th:field="*{mauSac}" class="form-control" id="mausac">
+                        <p th:if="${#fields.hasErrors('mauSac')}" th:errorclass="error" th:errors="*{mauSac}" />
                     </div>
 
                     <div class="col-8">
@@ -117,6 +124,7 @@
                 <div class="form-group">
                     <label for="nambh">Năm Ban Hành</label>
                     <input type="text" th:field="*{namBh}" class="form-control" id="nambh">
+                    <p th:if="${#fields.hasErrors('namBh')}" th:errorclass="error" th:errors="*{namBh}" />
                 </div>
                 <div class="form-group">
                     <label for="mota">Mô tả</label>
@@ -125,18 +133,22 @@
                 <div class="form-group">
                     <label for="soluongton">Số Lượng Tồn </label>
                     <input type="text" th:field="*{soLuongTon}" class="form-control" id="soluongton">
+                    <p th:if="${#fields.hasErrors('soLuongTon')}" th:errorclass="error" th:errors="*{soLuongTon}" />
                 </div>
                 <div class="form-group">
                     <label for="gianhap">Giá Nhập</label>
                     <input type="text" th:field="*{giaNhap}" class="form-control" id="gianhap">
+                    <p th:if="${#fields.hasErrors('giaNhap')}" th:errorclass="error" th:errors="*{giaNhap}" />
                 </div>
                 <div class="form-group">
                     <label for="giaban">Giá Bán</label>
                     <input type="text" th:field="*{giaBan}" class="form-control" id="giaban">
+                    <p th:if="${#fields.hasErrors('giaBan')}" th:errorclass="error" th:errors="*{giaBan}" />
                 </div>
                 <div class="form-group">
                     <label for="dongiakhigiam">Đơn giá khi giảm</label>
                     <input type="text" th:field="*{donGiaKhiGiam}" class="form-control" id="dongiakhigiam">
+                    <p th:if="${#fields.hasErrors('donGiaKhiGiam')}" th:errorclass="error" th:errors="*{donGiaKhiGiam}" />
                 </div>
 
                 <button type="submit" name="action" value="add" class="btn btn-primary">Save</button>
